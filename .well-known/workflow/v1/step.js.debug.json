@@ -1,0 +1,6 @@
+{
+  "stepFiles": [
+    "/Users/sourfruit/Desktop/vercel-workflow-bug/workflows/test.ts",
+    "/Users/sourfruit/Desktop/vercel-workflow-bug/node_modules/workflow/dist/stdlib.js"
+  ]
+}
