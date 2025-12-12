@@ -24,6 +24,19 @@ vercel-queue.com/api/v2/messages
 201
 ```
 
+## Stack
+- Latest React Router
+- "rr-next-routes" (just fills out routes.ts for me)
+- Latest Workflow SDK
+
+## Deployment
+Check out the deployment at https://vercel-workflow-bug.vercel.app. Trigger as many workflows as you'd like via:
+```
+curl -X POST https://vercel-workflow-bug.vercel.app/api/start
+```
+
+Here's a production run ID: `wrun_01KC9X1RQHC024Q8B8Y3VZ6NYT`
+
 ## Attempted Fixes
 
 ### Attempt 1 (current impl. here)
