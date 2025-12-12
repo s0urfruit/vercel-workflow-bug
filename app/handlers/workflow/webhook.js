@@ -1,22 +1,22 @@
-import path from "path"
-import { pathToFileURL } from "url"
+import { resumeWebhook } from "workflow/api"
 
-const webhook_module = import(/* @vite-ignore */ pathToFileURL(path.join(process.cwd(), ".well-known/workflow/v1/webhook.js")).href)
-
-async function call_webhook(request) {
-	const mod = await webhook_module
-	const method = request.method?.toUpperCase()
-	const handler = mod[method]
-	if (!handler) {
-		return new Response("Method not allowed", { status: 405 })
+async function call_webhook(request, params) {
+	const token = params?.token
+	if (!token) {
+		return new Response("Missing token", { status: 400 })
 	}
-	return handler(request)
+	try {
+		return await resumeWebhook(token, request)
+	} catch (error) {
+		console.error("Error during resumeWebhook", error)
+		return new Response(null, { status: 404 })
+	}
 }
 
-export async function loader({ request }) {
-	return call_webhook(request)
+export async function loader({ request, params }) {
+	return call_webhook(request, params)
 }
 
-export async function action({ request }) {
-	return call_webhook(request)
+export async function action({ request, params }) {
+	return call_webhook(request, params)
 }
