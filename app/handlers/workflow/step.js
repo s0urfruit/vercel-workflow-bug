@@ -5,7 +5,7 @@ const step_module = import(path.join(process.cwd(), ".well-known/workflow/v1/ste
 async function call_step(request) {
 	const mod = await step_module
 	const method = request.method?.toUpperCase()
-	const handler = mod[method] || mod.POST
+	const handler = mod[method]
 	if (!handler) {
 		return new Response("Method not allowed", { status: 405 })
 	}

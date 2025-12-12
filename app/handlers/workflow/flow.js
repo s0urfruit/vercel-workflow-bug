@@ -5,7 +5,7 @@ const flow_module = import(path.join(process.cwd(), ".well-known/workflow/v1/flo
 async function call_flow(request) {
 	const mod = await flow_module
 	const method = request.method?.toUpperCase()
-	const handler = mod[method] || mod.POST
+	const handler = mod[method]
 	if (!handler) {
 		return new Response("Method not allowed", { status: 405 })
 	}
