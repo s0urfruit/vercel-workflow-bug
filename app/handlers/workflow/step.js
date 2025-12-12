@@ -1,12 +1,11 @@
 import path from "path"
-import { createRequire } from "module"
 
-const require_cjs = createRequire(import.meta.url)
-const step = require_cjs(path.join(process.cwd(), ".well-known/workflow/v1/step.js"))
+const step_module = import(path.join(process.cwd(), ".well-known/workflow/v1/step.js"))
 
-function call_step(request) {
+async function call_step(request) {
+	const mod = await step_module
 	const method = request.method?.toUpperCase()
-	const handler = step[method] || step.POST
+	const handler = mod[method] || mod.POST
 	if (!handler) {
 		return new Response("Method not allowed", { status: 405 })
 	}

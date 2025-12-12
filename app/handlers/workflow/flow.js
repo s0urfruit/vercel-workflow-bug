@@ -1,12 +1,11 @@
 import path from "path"
-import { createRequire } from "module"
 
-const require_cjs = createRequire(import.meta.url)
-const flow = require_cjs(path.join(process.cwd(), ".well-known/workflow/v1/flow.js"))
+const flow_module = import(path.join(process.cwd(), ".well-known/workflow/v1/flow.js"))
 
-function call_flow(request) {
+async function call_flow(request) {
+	const mod = await flow_module
 	const method = request.method?.toUpperCase()
-	const handler = flow[method] || flow.POST
+	const handler = mod[method] || mod.POST
 	if (!handler) {
 		return new Response("Method not allowed", { status: 405 })
 	}
