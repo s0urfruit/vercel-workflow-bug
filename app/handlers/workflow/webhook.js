@@ -1,26 +1,21 @@
-// webhook.js uses ESM, so we import from workflow/api directly
-import { resumeWebhook } from "workflow/api"
+import path from "path"
 
-async function handler(request, params) {
-	const token = params?.token
-	
-	if (!token) {
-		return new Response("Missing token", { status: 400 })
-	}
+const webhook_module = import(path.join(process.cwd(), ".well-known/workflow/v1/webhook.js"))
 
-	try {
-		const response = await resumeWebhook(token, request)
-		return response
-	} catch (error) {
-		console.error("Error during resumeWebhook", error)
-		return new Response(null, { status: 404 })
+async function call_webhook(request) {
+	const mod = await webhook_module
+	const method = request.method?.toUpperCase()
+	const handler = mod[method] || mod.POST
+	if (!handler) {
+		return new Response("Method not allowed", { status: 405 })
 	}
+	return handler(request)
 }
 
-export async function action({ request, params }) {
-	return handler(request, params)
+export async function loader({ request }) {
+	return call_webhook(request)
 }
 
-export async function loader({ request, params }) {
-	return handler(request, params)
+export async function action({ request }) {
+	return call_webhook(request)
 }
