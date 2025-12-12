@@ -5,11 +5,18 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import { workflow } from "workflow/vite";
 import { transform } from "@swc/core";
 import path from "path";
+import { createRequire } from "module";
 
 function workflow_swc_plugin() {
+	const require_cjs = createRequire(import.meta.url);
+	const swc_plugin_path = require_cjs.resolve("@workflow/swc-plugin");
+
 	return {
 		name: "workflow-swc-client-transform",
 		async transform(code: string, id: string) {
+			if (id.includes("node_modules")) {
+				return null;
+			}
 			if (!id.match(/\.(ts|tsx|js|jsx)$/)) {
 				return null;
 			}
@@ -18,9 +25,14 @@ function workflow_swc_plugin() {
 			}
 			const result = await transform(code, {
 				filename: id,
+				sourceMaps: true,
 				jsc: {
+					parser: {
+						syntax: id.endsWith("ts") || id.endsWith("tsx") ? "typescript" : "ecmascript",
+						tsx: id.endsWith("tsx"),
+					},
 					experimental: {
-						plugins: [[require.resolve("@workflow/swc-plugin"), { mode: "client" }]],
+						plugins: [[swc_plugin_path, { mode: "client" }]],
 					},
 				},
 			});
