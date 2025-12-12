@@ -6,6 +6,7 @@ import { workflow } from "workflow/vite";
 import { transform } from "@swc/core";
 import path from "path";
 import { createRequire } from "module";
+import { vercelPreset } from '@vercel/react-router/vite'
 
 function workflow_swc_plugin() {
 	const require_cjs = createRequire(import.meta.url);
@@ -43,6 +44,7 @@ function workflow_swc_plugin() {
 
 export default defineConfig({
 	plugins: [
+        vercelPreset(),
 		tailwindcss(),
 		workflow_swc_plugin(),
 		reactRouter(),

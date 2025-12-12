@@ -1,6 +1,7 @@
 import path from "path"
+import { pathToFileURL } from "url"
 
-const webhook_module = import(path.join(process.cwd(), ".well-known/workflow/v1/webhook.js"))
+const webhook_module = import(/* @vite-ignore */ pathToFileURL(path.join(process.cwd(), ".well-known/workflow/v1/webhook.js")).href)
 
 async function call_webhook(request) {
 	const mod = await webhook_module
