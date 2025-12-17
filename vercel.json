@@ -1,0 +1,33 @@
+{
+	"build": {
+		"env": {
+			"VERCEL_CLI_VERSION": "https://vercel-9t9860svl.vercel.sh/tarballs/vercel.tgz"
+		}
+	},
+	"functions": {
+		".well-known/workflow/v1/flow": {
+			"experimentalTriggers": [
+				{
+					"type": "queue/v1beta",
+					"topic": "__wkf_workflow_*",
+					"consumer": "default",
+					"maxDeliveries": 64,
+					"retryAfterSeconds": 5,
+					"initialDelaySeconds": 0
+				}
+			]
+		},
+		".well-known/workflow/v1/step": {
+			"experimentalTriggers": [
+				{
+					"type": "queue/v1beta",
+					"topic": "__wkf_step_*",
+					"consumer": "default",
+					"maxDeliveries": 64,
+					"retryAfterSeconds": 5,
+					"initialDelaySeconds": 0
+				}
+			]
+		}
+	}
+}
